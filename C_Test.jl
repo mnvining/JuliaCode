@@ -8,14 +8,14 @@ include("coeffcalc.jl")
 include("hsol.jl")
 include("ConvertToBig.jl")
 include("GreensInt.jl")
-mm=21 # number of values
-Al=logspace(-4,-1,mm)
-C_Guess=logspace(-7,-5,mm)
+mm=41 # number of values
+Al=logspace(-4,-2,mm)
+C_Guess=logspace(-5,-3,mm)
 cl=Int(5)
 
-acc=zeros(mm,1)
+acc=zeros(mm,mm)
 #acc2=zeros(mm,1)
-stab=zeros(mm,1)
+stab=zeros(mm,mm)
 
 
 
@@ -25,10 +25,10 @@ stab=zeros(mm,1)
 
 Z=[];
 for i=1:mm
-    #for j=1:mm
+    for j=1:mm
         #RUN2(NG,Al,n,d,cl,opt,plotopt,c_1,c_2)
-        (acc[i],acc2,stab[i])=RUN2(Int(32),BigFloat(Al[i]),Int(9),Int(6),Int(5),Int(1),0,1/(C_Guess[1]),C_Guess[1])
-    #end
+        (acc[i,j],acc2,stab[i,j])=RUN2(Int(32),BigFloat(Al[i]),Int(9),Int(6),Int(5),Int(8),0,1/(C_Guess[j]),1)
+    end
     println(i)
 end
 
