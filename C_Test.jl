@@ -9,8 +9,8 @@ include("hsol.jl")
 include("ConvertToBig.jl")
 include("GreensInt.jl")
 mm=41 # number of values
-Al=logspace(-4,-2,mm)
-C_Guess=logspace(-5,-3,mm)
+Al=logspace(-3.5,-2,mm)
+C_Guess=logspace(-20,-10,mm)
 cl=Int(5)
 
 acc=zeros(mm,mm)
