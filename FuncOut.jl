@@ -86,3 +86,4 @@ zz=[-EG2'*EH1; -EG2'*EH2]
 
 
    return BB=EGGf+cobb[1]*Eh1f+cobb[2]*Eh2f
+end
