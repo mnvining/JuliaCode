@@ -27,7 +27,7 @@ Z=[];
 for i=1:mm
     for j=1:mm
         #RUN2(NG,Al,n,d,cl,opt,plotopt,c_1,c_2)
-        (acc[i,j],acc2,stab[i,j])=RUN2(Int(32),BigFloat(Al[i]),Int(9),Int(6),Int(5),Int(8),0,1/(C_Guess[j]),1)
+        (acc[i,j],acc2,stab[i,j],d)=RUN2(Int(32),BigFloat(Al[i]),Int(9),Int(6),Int(5),Int(8),0,1/(C_Guess[j]),1)
     end
     println(i)
 end

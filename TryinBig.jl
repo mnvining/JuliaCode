@@ -125,9 +125,9 @@ acc=norm(FF1-BB)
     
 
     
+    NB=round(Int,floor(length(BB)/2))
 
-
-    return acc,acc2,stab
+    return acc,acc2,stab,BB[NB]
 end
 
 
