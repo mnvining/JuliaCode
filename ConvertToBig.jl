@@ -1,7 +1,7 @@
 function ConvertToBig(x)
-    z=0*x
+    z=Array{BigFloat,1}()
     for i = 1:length(x)
-        z[i]=BigFloat(x[i])
+        push!(z,BigFloat(x[i]))
     end
     return z
 end

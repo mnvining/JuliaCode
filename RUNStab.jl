@@ -1,129 +1,252 @@
 
 using SymPy
 using GenericSVD
-function RUNStab(NG,Al,n,d,cl,opt,c_1,c_2)
+using LinearAlgebra
+function RUNStab(F,Al,n,d,cl,NoMo,opt)
     # uses NG grid points (int)
     # uses Al for alpha - should be a big float
     # n for number of coarse grid pts on -1,1 (int)
     # d for degree of gram poly (int)
     # cl continuation length (extended domain is [-1,1+cl)- cl must be type Int
-    # opt: 1 for func, 2 for 2nd der, 3, for sobolev
-    # c_1 - coeff of f c_2 coeff d^2 f
+    # opt: 0 for even, 1 for odd
+    # lam - weight of h1,h2
+    # mu - weight of u
     
     
 
 
-include("ConvertToBig.jl")
-include("dftmtx.jl")
-include("Greens.jl")
-include("hsol.jl")
-include("coeffcalc.jl")
-include("All.jl")
+    include("ConvertToBig.jl")
+    include("dftmtx.jl")
+    include("Greens.jl")
+    include("hsol.jl")
+    include("coeffcalc.jl")
+    include("Spaces.jl")
+    include("All.jl")
     include("GreensInt.jl")
     include("FuncOut.jl")
-x=Sym("x")
+    x=Sym("x")
 
-xx=linspace(-1,1,NG+1)
-    xx=xx[1:end-1]
-    h=xx[2]-xx[1]
-    x2=collect(-1:h:1+cl-h)
-    xcoarse1=collect(linspace(-1,1,n))
-    xcoarse=xcoarse1[1:end-1]
-    hh=xcoarse[2]-xcoarse[1]
-    xcoarseext=collect(-1:hh:1+cl-hh)
-f(x)=fmaker(d,n)
+    h1=2/(n-1);
+    xcoarse1=collect(-1:h1:1-h1);
+    #xcoarse2=collect(1+cl:h1:3+cl-h1);
+
+    h2=h1/F;
+    
+
+    #h=xx[2]-xx[1]
+    #x2=collect(6:h:1+2*cl-h1)
+    #xall=collect(-1:h:1+2*cl-h1)
+    xx=collect(-1:h2:1-h1);
+    NG=length(xx);
+    
+    f(x)=fmaker(d,n)
     ef=ConvertToBig(evalasarray(f(x),xx))
-    efff=ConvertToBig(evalasarray(f(x),xcoarse))
-M=round(Int,floor(length(xcoarseext)/2))
+    ef2=ConvertToBig(evalasarray((-1)^opt*f(x),xx))
+    ef=vcat(ef,ef2)
+    efff=ConvertToBig(evalasarray(f(x),xcoarse1))
+    M=round(Int,round(Int,floor(NoMo/2))) # x2 because double modes
   
-ZZ=Int(cl*NG/2+NG);
+    ZZ=round(Int,((cl*NG/2+NG))) # x2 because double domain
+
+    LD=round(Int,NG/(n-1))
     Modes=vcat(collect(1:M+1),collect(ZZ-M+1:ZZ))
-    #println(length(Modes))
-
-A=createFWDcont(NG,Modes,cl)
-B=createBackDoubleDomain(NG,Modes,cl)
-
-    GG(x)=totalGreen(d,n,Al)
-    d2GG(x)=diff(GG(x),x,2)
-    GPrime(x)=diff(GG(x),x,1)
+    NMU=length(Modes);
     
-    (h1,h2)=hsol(xx,Al)
-    h1Prime(x)=diff(h1(x),x,1)
-    h2Prime(x)=diff(h2(x),x,1)
-    d2h1(x)=diff(h1(x),x,2)
-    d2h2(x)=diff(h2(x),x,2)
+
+    A=dftmtx(ZZ)
+    A=A';
+    A=A/sqrt(ZZ)
+
+    A=A[:,Modes]
+    
+    ACont1=A[1:NG,:]
+    #ACont2=A[round(Int,ZZ/2)+1:round(Int,ZZ/2)+NG,:]
+
 
     
-    EGG=ConvertToBig(evalasarray(GG(x),xcoarse1))
-    Eh1=ConvertToBig(evalasarray(h1(x),xcoarse1))
-    Eh2=ConvertToBig(evalasarray(h2(x),xcoarse1))
-    eh1pr=ConvertToBig(evalasarray(h1Prime(x),xcoarse1))
-    eh2pr=ConvertToBig(evalasarray(h2Prime(x),xcoarse1))
-    Gpr=ConvertToBig(evalasarray(GPrime(x),xcoarse1))
-    EG2=ConvertToBig(evalasarray(d2GG(x),xcoarse1))
-    EH1=ConvertToBig(evalasarray(d2h1(x),xcoarse1))
-    EH2=ConvertToBig(evalasarray(d2h2(x),xcoarse1))
-
-    if opt==1
-        Z=[Eh1'*Eh1 Eh2'*Eh1; Eh1'*Eh2 Eh2'*Eh2]
-zz=[-EGG'*Eh1; -EGG'*Eh2]
-    elseif opt==2
-        Z=[EH1'*EH1 EH2'*EH1; EH1'*EH2 EH2'*EH2]
-zz=[-EG2'*EH1; -EG2'*EH2]
-    elseif opt==3
-        Z=[(Eh1'*Eh1+eh1pr'*eh1pr) (Eh1'*Eh2+eh1pr'*eh2pr); (Eh1'*Eh2+eh1pr'*eh2pr) (Eh2'*Eh2+eh2pr'*eh2pr)]
-        zz=[-EGG'*Eh1-Gpr'*eh1pr; -EGG'*Eh2-Gpr'*eh2pr]
-    elseif opt==4
-        Z=[(Eh1'*Eh1+eh1pr'*eh1pr+EH1'*EH1) (Eh1'*Eh2+eh1pr'*eh2pr+EH1'*EH2); (Eh1'*Eh2+eh1pr'*eh2pr+EH1'*EH2) (Eh2'*Eh2+eh2pr'*eh2pr+EH2'*EH2)]
-        zz=[-EGG'*Eh1-Gpr'*eh1pr-EG2'*EH1; -EGG'*Eh2-Gpr'*eh2pr-EG2'*EH1]
-    else
-        Z=[(c_1^2*Eh1'*Eh1+c_1*c_2*Eh1'*EH1+c_1*c_2*EH1'*Eh1+c_1*c_2*Eh1'*EH1+c_2^2*EH1'*EH1) (c_1^2*Eh2'*Eh1+c_1*c_2*Eh2'*EH1+c_1*c_2*EH2'*EH1+c_1*c_2*Eh2'*EH1+c_2^2*EH2'*EH1);(c_1^2*Eh1'*Eh2+c_1*c_2*Eh1'*EH2+c_1*c_2*EH1'*Eh2+c_1*c_2*Eh1'*EH2+c_2^2*EH1'*EH2) (c_1^2*Eh2'*Eh2+c_1*c_2*Eh2'*EH2+c_1*c_2*EH2'*EH2+c_1*c_2*Eh2'*EH2+c_2^2*EH2'*EH2)]
-        zz=[-c_1^2*EGG'Eh1-c_1*c_2*EGG'*EH1-c_1*c_2*EG2'*Eh1-c_1*c_2*EGG'*Eh1-c_2^2*EG2'*EH1;-c_1^2*EGG'Eh2-c_1*c_2*EGG'*EH2-c_1*c_2*EG2'*Eh2-c_1*c_2*EGG'*Eh2-c_2^2*EG2'*EH2]
-        end
-    cobb=Z\zz
+    LL=round(Int,ZZ/2)
+    fd=((cl+2)/2);
+    K=zeros(BigFloat,ZZ)
+    K=-pi*1im*vcat(collect(0:LL-1),0,collect(-(LL-1):-1))
 
     
+    # derivative coefficients pertaining to the FC
+    qq=vcat(K[1:M+1],K[(ZZ)-M+1:(ZZ)])/fd;
+    D = Diagonal(I,(length(qq)))-Al*Diagonal{BigFloat}(qq.*qq)
+    D_Dag=pinv(D,1e-40)
+
+    GG(x)=totalGreen(d,n,Al,xcoarse1[end])
+    
+    (h1,h2)=hsol(xx,Al,xcoarse1[end])
+
 
     EGGf=ConvertToBig(evalasarray(GG(x),xx))
     Eh1f=ConvertToBig(evalasarray(h1(x),xx))
     Eh2f=ConvertToBig(evalasarray(h2(x),xx))
+    U_G=ConvertToBig(evalasarray(GG(x),xcoarse1))
 
 
-    BB=EGGf+cobb[1]*Eh1f+cobb[2]*Eh2f
+                     Ent_1=hcat(ACont1,zeros(NG,2))
+                     #Ent_2=hcat(ACont2,zeros(NG,2))
+                     Ent_3=hcat(ACont1*D_Dag,Eh1f,Eh2f)
+                     #Ent_4=hcat(ACont2*D_Dag,(-1)^opt*Eh1f,(-1)^opt*Eh2f)
+
+
+    #AugMat=vcat(Ent_1,Ent_2,Ent_3,Ent_4)
+    AugMat=vcat(Ent_1,Ent_3);
+                     #P=ACont1*D_Dag;
+                     #P2=ACont1*D_Dag;
+                     #P2[1:LD:end,:]=zeros(length(1:LD:NG),length(Modes));
+    #US=P-P2;# this is the coarse grid eval of u I THINK
+
+    #P=ACont2*D_Dag;
+    #P2=ACont2*D_Dag;
+    #P2[1:LD:end,:]=zeros(length(1:LD:NG),length(Modes));
+    #US2=P-P2;
+
+
+    #Ent_6=hcat(mu*US,zeros(NG,2));
+    #Ent_7=hcat(mu*US2,zeros(NG,2));
 
     
 
-D=createId2Derivative(NG,M,Al,cl)
-D_Dag=pinv(D,1e-14)
-
-AugMat=vcat(A,A*D_Dag')
-
-AugVec=vcat(ef,BB)
+                     
 
 
+                     
+                     
 
-Cin=AugMat\AugVec
+    #if lam>0
+        
+
+        #Ent_5=hcat(zeros(size(ACont1)),lam*Eh1f,lam*Eh2f)
+        #AugMat=vcat(AugMat,Ent_5)
+                     #end
+
+    #AugMat=vcat(AugMat,Ent_6,Ent_7);
+    println(size(AugMat))
+
+    if opt==0
+        if mod(NMU,2)==0
+            AugMat=AugMat[:,setdiff(1:end,vcat(2:2:M,M+1:2:end-2))]
+        else
+            AugMat=AugMat[:,setdiff(1:end,vcat(2:2:M+2,M+3:2:end-2))]
+        end
+    else
+        if mod(NMU,2)==0
+            AugMat=AugMat[:,setdiff(1:end,vcat(1:2:M,M+2:2:end-2))]
+        else
+            AugMat=AugMat[:,setdiff(1:end,vcat(1:2:M,M+3:2:end-2))]
+        end
+    end
+
+ 
+
+    
+#if lam >0
+ #   AugVec=vcat(ef,EGGf,(-1)^opt*EGGf,0*Eh1f)
+#else
+    AugVec=vcat(ef[1:NG],EGGf)
+    println(size(AugVec))
+    println(size(AugMat))
+
+                     #AugVec=vcat(AugVec,0*Eh1f,0*Eh1f)
 
 
-    FF1ex=real(B*D_Dag*Cin)
-    FF1=real(A*D_Dag*Cin)
-    FF2=real(A*Cin)
-    FF2ex=real(B*Cin)
-acc=norm(FF1-BB)
-    acc2=norm(FF2-ef)
-    # coarse grid things
-    LD=round(Int,NG/(n-1))
-    solcoarse=FF1[1:LD:end];
+    (U,S,V)=GenericSVD.svd(AugMat)
+    S=Diagonal{BigFloat}(S)
+    S_Dag=pinv(S,1e-40)
+    
+    Res=V*(S_Dag*(U'*AugVec))
+
+    
+    
+    
+
+    Cin=Res[1:end-2];
+
+if opt == 0
+    if mod(NMU,2)==0
+       A=A[:,setdiff(1:end,vcat(2:2:M,M+1:2:end))]
+    else
+       A=A[:,setdiff(1:end,vcat(2:2:M+2,M+3:2:end))]
+    end
+else
+    if mod(NMU,2)==0
+        A=A[:,setdiff(1:end,vcat(1:2:M,M+2:2:end))]
+    else
+        A=A[:,setdiff(1:end,vcat(1:2:M,M+3:2:end))]
+    end
+end
+
+if opt == 0
+    if mod(NMU,2)==0
+        ACont1=ACont1[:,setdiff(1:end,vcat(2:2:M,M+1:2:end))]
+    else
+        ACont1=ACont1[:,setdiff(1:end,vcat(2:2:M+2,M+3:2:end))]
+    end
+else
+    if mod(NMU,2)==0
+        ACont1=ACont1[:,setdiff(1:end,vcat(1:2:M,M+2:2:end))]
+    else
+        ACont1=ACont1[:,setdiff(1:end,vcat(1:2:M,M+3:2:end))]
+    end
+end
+if opt == 0
+    if mod(NMU,2)==0
+        D_Dag=D_Dag[setdiff(1:end,vcat(2:2:M,M+1:2:end)),:]
+    else
+        D_Dag=D_Dag[setdiff(1:end,vcat(2:2:M+2,M+3:2:end)),:]
+    end
+else
+    if mod(NMU,2)==0
+        D_Dag=D_Dag[setdiff(1:end,vcat(1:2:M,M+2:2:end)),:]
+    else
+        D_Dag=D_Dag[setdiff(1:end,vcat(1:2:M,M+3:2:end)),:]
+    end
+end
+
+if opt == 0
+    if mod(NMU,2)==0
+        D_Dag=D_Dag[:,setdiff(1:end,vcat(2:2:M,M+1:2:end))]
+    else
+        D_Dag=D_Dag[:,setdiff(1:end,vcat(2:2:M+2,M+3:2:end))]
+    end
+else
+    if mod(NMU,2)==0
+        D_Dag=D_Dag[:,setdiff(1:end,vcat(1:2:M,M+2:2:end))]
+    else
+        D_Dag=D_Dag[:,setdiff(1:end,vcat(1:2:M,M+3:2:end))]
+    end
+end
+
+
+println(size(A))
+
+    
+    F1=real(A*Cin);
+    FF1=real(ACont1*D_Dag*Cin)#+Res[end-1]*Eh1f+Res[end]*Eh2f);
+
+acc=norm(F1[1:NG]-ef[1:NG])
+
+#FF2=real(ACont1*D_Dag*Cin+Res[end-1]*Eh1f+Res[end]*Eh2f)
+
+
+
+    
+# coarse grid things
+solcoarse=FF1[1:LD:end];
+
+#ExAc=norm(FF2[1:100]-EGGf[1:100])
 
     
     stab=norm(solcoarse)/norm(efff)
     
-    
 
     
-    NB=round(Int,floor(length(BB)/2))
+    #NB=round(Int,floor(length(Eh1f)/2))
 
-    return stab
+    return acc,stab,F1,EGGf,ef,efff#FF1,ef,Res[end-1:end],FF2,ExAc
 end
 
 

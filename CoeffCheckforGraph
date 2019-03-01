@@ -1,0 +1,21 @@
+using PyPlot
+using SymPy
+using GenericSVD
+include("TryinBig.jl")
+include("All.jl")
+include("dftmtx.jl")
+include("coeffcalc.jl")
+include("hsol.jl")
+include("ConvertToBig.jl")
+include("GreensInt.jl")
+include("RUNGraph.jl")
+Al=logspace(-8,2,40)
+StabMat=zeros(40,1)
+A1=zeros(40,1)
+A2=zeros(40,1)
+
+for i=1:40
+
+
+end
+

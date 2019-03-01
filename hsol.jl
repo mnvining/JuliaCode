@@ -1,13 +1,10 @@
 using SymPy
-function hsol(z,Al)
+function hsol(z,Al,p)
     # z is grid of pts
     x=Sym("x")
-    Ar1=evalasarray(exp(1/sqrt(Al)*(1-x)),z)
-    Ar2=evalasarray(exp(1/sqrt(Al)*(x-1)),z)
-    val1=norm(Ar1)
-    val2=norm(Ar2)
-    h_sol_1(x)=exp(1/sqrt(Al)*(1-x))/val1
-    h_sol_2(x)=exp(1/sqrt(Al)*(x-1))/val2
+
+    h_sol_1(x)=exp(1/sqrt(Al)*(-x-1))
+    h_sol_2(x)=exp(1/sqrt(Al)*(x-p))
 
     return h_sol_1,h_sol_2
 end

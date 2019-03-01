@@ -1,11 +1,11 @@
      using SymPy
-
+using LinearAlgebra
 
 
 function fmaker(d,n)
     x=Sym("x")
-    z=collect(linspace(-1,1,n))
-    z=z[1:end-1]
+    h=2/(n-1);
+    z=collect(-1:h:1-h);
     A=fliplr(myvander(z))
     Q,R=qr(A)
     if d==0
