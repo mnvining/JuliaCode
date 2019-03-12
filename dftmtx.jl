@@ -1,6 +1,6 @@
 using LinearAlgebra
 function dftmtx(n)
-    f=2*pi/n
+    f=BigFloat(2)*BigFloat(pi)/BigFloat(n)
     w=zeros(BigFloat,length(0:f:2*pi-f/2))
 w=(collect(0:f:2*pi-f/2)*1im)
 x=collect(0:n-1)'

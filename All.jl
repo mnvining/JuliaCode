@@ -3,11 +3,12 @@ using LinearAlgebra
 
 
 function fmaker(d,n)
+    include("myhouse.jl")
     x=Sym("x")
-    h=2/(n-1);
-    z=collect(-1:h:1-h);
+    h=BigFloat(1)/BigFloat(n-1);
+    z=collect(BigFloat,-1:h:0);
     A=fliplr(myvander(z))
-    Q,R=qr(A)
+    (Q,R)=HRQR(A)
     if d==0
         expr=1/R[1,1]*x^0
         return expr

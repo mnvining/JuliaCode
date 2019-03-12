@@ -14,7 +14,7 @@ end
 
 function fliplr(A)
     (m,n)=size(A)
-    N=zeros(size(A))
+    N=zeros(BigFloat,size(A))
 
     for j=1:n
         N[:,n-j+1]=A[:,j]
@@ -25,7 +25,7 @@ end
 function myvander(x)
     
     L=length(x)
-    M=zeros(L,L)
+    M=zeros(BigFloat,L,L)
     for i=1:L
         M[:,L-i+1]=x.^(i-1)
     end

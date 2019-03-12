@@ -1,8 +1,11 @@
 
 
 function linspace(a,b,n)
-h=(b-a)/(n-1);
-z=collect(a:h:b)
+    z=zeros(BigFloat,n,1);
+    h=(BigFloat(b-a)/BigFloat(n-1));
+    for i=1:n
+        z[i]=a+h*(i-1)
+    end
 return z
 end
 

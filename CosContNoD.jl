@@ -1,7 +1,8 @@
 using SymPy
 using LinearAlgebra
 using PyPlot
-function CosCont(d,Al)
+using GenericSVD
+function CosContNoD(d,Al)
 
 
     include("CosMtx.jl")
@@ -39,71 +40,32 @@ function CosCont(d,Al)
     y=zeros(BigFloat,size(xx))
     y=evalasarray(f(x),xx)
 
-
-    #x_g=collect(BigFloat,A:1/(n-1)/F:D-A);
-    #xf=collect(BigFloat,-D-h1:h1:D);
-
-    GG(x)=totalGreen(d,n+1,Al,0);
-    EGGf=evalasarray(GG(x),xx);
-    (h1,h2)=hsol(xx,Al,0)
-    Eh1f=(evalasarray(h1(x),xx))
-    Eh2f=(evalasarray(h2(x),xx))
-   
-
     (M,B,C)=CosMtx(D,A,n,F);
 
+    (U,S,V)=GenericSVD.svd(B);
+    S=Diagonal{BigFloat}(S);
+    SD=GenericSVD.pinv(S,1e-40);
+    Res1=V*(SD*(U'*y))
     
-    println(size(B))
 
-    
-    (s1,s2)=size(B);
 
-    
-    (D1,D2)=CosDer2(D,A,n,F);
+    fc=M*Res1;
+    f_AD=fc[428:428+90];
 
     DO=DiffOp(D,A,n,F,Al,1);
     IDO=zeros(BigFloat,size(DO))
     for i=1:length(DO[1,:])
         IDO[i,i]=1/DO[i,i];
     end
-    
-    
-    Ent_1=hcat(B,zeros(BigFloat,s1,2));
-    Ent_2=hcat(B*IDO,Eh1f,Eh2f);
-    
-    AugMat=vcat(Ent_1,Ent_2)
-    AugVec=vcat(y,EGGf)
-    #figure(88)
-    #plot(y)
 
-    #(Res1,PP)=SolveViaQR(AugMat,AugVec)
-    #(Res1,PP)=SolveViaQR(B,y);
-    (Uc,Sc,Vc)=GenericSVD.svd(AugMat);
-    Sc=Diagonal{BigFloat}(Sc);
-    Scd=pinv(Sc,1e-40);
-    Res1=Vc*(Scd*(Uc'*AugVec));
-    #Res1=AugMat\AugVec
-    
-
-    
-    #Res1=B\y;
-
-    fc=M*Res1[1:end-2];
-    f_AD=fc[428:428+90];
-    uc=M*(DO*Res1[1:end-2])
-    u_AD=uc[428:428+90];
+    uc=M*IDO*Res1;
+    u_AD=uc[428:428+90]
     
     
     
     
 
-    
-    
-    
-    
-    
-
-    return norm(f_AD-y),uc,fc,y#,AugMat,AugVec
+    return norm(f_AD-y),fc,y,uc#,AugMat,AugVec
 
 end
 

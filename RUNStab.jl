@@ -11,7 +11,7 @@ function RUNStab(F,Al,n,d,cl,NoMo,opt)
     # opt: 0 for even, 1 for odd
     # lam - weight of h1,h2
     # mu - weight of u
-    
+    setprecision(200)
     
 
 
@@ -24,6 +24,7 @@ function RUNStab(F,Al,n,d,cl,NoMo,opt)
     include("All.jl")
     include("GreensInt.jl")
     include("FuncOut.jl")
+    include("myhouse.jl")
     x=Sym("x")
 
     h1=2/(n-1);
@@ -124,7 +125,7 @@ function RUNStab(F,Al,n,d,cl,NoMo,opt)
                      #end
 
     #AugMat=vcat(AugMat,Ent_6,Ent_7);
-    println(size(AugMat))
+
 
     if opt==0
         if mod(NMU,2)==0

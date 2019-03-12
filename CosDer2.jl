@@ -1,10 +1,5 @@
-function CosMtx(D,A,n,F)
-    # D = endpoint, period 2D
-    # A = starting point
-    # n = number of points, coarse grid
-    # F = mult. factor coarse to fine grid
-
-    
+function CosDer2(D,A,n,F)
+    # first derivative of the cos expansion
     hc=BigFloat(1)/BigFloat((n-1));
     Coarse=collect(BigFloat,-D+hc:hc:D)
     Coarse=Coarse.-(5/90)
@@ -19,19 +14,10 @@ function CosMtx(D,A,n,F)
     #Modes=5;
     M=zeros(BigFloat,LF,Modes+1)
     B=zeros(BigFloat,SB,Modes+1);
-    C=zeros(BigFloat,LF,LF);
-
         for j=1:Modes+1
-            M[:,j]=cos.((j-1)*Fine/D*pi);
-            B[:,j]=cos.((j-1)*F1/D*pi);
+            M[:,j]=-(j-1)^2*pi^2/D^2*cos.((j-1)*pi/D*Fine);
+            B[:,j]=-(j-1)^2*pi^2/D^2*cos.((j-1)*pi/D*F1);
+            
         end
-    for i=1:LF
-        C[:,i]=cos.((i-1)*Fine/D*pi)
-    end
-    
-
-    return M,B,C
+    return M,B
 end
-
-    
-    

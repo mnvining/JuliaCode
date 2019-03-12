@@ -14,10 +14,9 @@ function evalasarray(expr,z)
     # z is array
     # N only works on single values, this returns array of evaluations
     x=Sym("x")
-    q=zeros(size(z));
+    q=zeros(BigFloat,size(z));
     for i=1:length(z)
-        p=subs(expr,x,z[i])
-        q[i]=N(p)
+        q[i]=subs(expr,x,z[i])
     end
     return q
 end
