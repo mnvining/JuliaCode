@@ -5,19 +5,29 @@ function SinMtx(D,A,n,F)
     # F = mult. factor coarse to fine grid
 
     
-    hc=1/(n-1);
-    Coarse=collect(-D+hc:hc:D)
+    hc=BigFloat(1)/BigFloat((n-1));
+    Coarse=collect(BigFloat,-D+hc:hc:D)
+    Coarse=Coarse.-(5/90)
     LC=length(Coarse)
-    hf=hc/F;
-    Fine=collect(-D+hf:hf:D)
+    hf=BigFloat(1)/(BigFloat((n-1))*BigFloat(F));
+    Fine=collect(BigFloat,-D+hf:hf:D)
+    Fine=Fine.-5/900;
     LF=length(Fine)
+    F1=collect(BigFloat,A:hf:D-A);
+    SB=length(F1)
     Modes=round(Int,floor(LC/2)-1);
     M=zeros(BigFloat,LF,Modes)
+    B=zeros(BigFloat,SB,Modes)
+    C=zeros(BigFloat,LF,LF)
 
-    for i=1:LF
+
         for j=1:Modes
-            M[i,j]=sin((j)*Fine[i]/D*pi);
+            M[:,j]=sin.((j)*Fine/D*pi);
+            B[:,j]=sin.((j)*F1/D*pi);
         end
-    end
-    return M
+    for i=1:LF
+        C[:,i]=sin.(i*Fine/D*pi)
+        end
+
+    return M,B,C
 end

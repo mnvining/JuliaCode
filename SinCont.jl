@@ -1,12 +1,10 @@
 using SymPy
 using LinearAlgebra
 using PyPlot
-function CosCont(d,Al,Lam)
+function SinCont(d,Al,Lam)
 
 
-    include("CosMtx.jl")
-    include("CosDer.jl")
-    include("CosDer2.jl")
+    include("SinMtx.jl")
     include("All.jl")
     include("ConvertToBig.jl")
     include("hsol.jl")
@@ -45,14 +43,12 @@ function CosCont(d,Al,Lam)
     Eh1f=(evalasarray(h1(x),xx))
     Eh2f=(evalasarray(h2(x),xx)) 
 
-    (M,B,C)=CosMtx(D,A,n,F);
+    (M,B,C)=SinMtx(D,A,n,F);
     
     (s1,s2)=size(B);
 
-    
-    (D1,D2)=CosDer2(D,A,n,F);
 
-    DO=DiffOp(D,A,n,F,Al,1);
+    DO=DiffOp(D,A,n,F,Al,0);
     IDO=zeros(BigFloat,size(DO))
     for i=1:length(DO[1,:])
         IDO[i,i]=1/DO[i,i];
@@ -76,7 +72,7 @@ function CosCont(d,Al,Lam)
     uc=M*(IDO*Res1[1:end-2])
     u_AD=uc[428:428+90]
 
-    return norm(f_AD-y),norm(u_AD[1:10:end])/norm(y[1:10:end])
+    return norm(f_AD-y),norm(u_AD[1:10:end])/norm(y[1:10:end]),fc,uc,y
 
 end
 

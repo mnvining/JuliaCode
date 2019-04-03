@@ -1,7 +1,7 @@
 using SymPy
 using LinearAlgebra
 using PyPlot
-function CosCont(d,Al,Lam)
+function CosCont3(d,Al,Lam)
 
 
     include("CosMtx.jl")
@@ -59,24 +59,21 @@ function CosCont(d,Al,Lam)
     end
     
     
-    Ent_1=hcat(B,zeros(BigFloat,s1,2));
-    Ent_2=hcat(B*IDO,Eh1f,Eh2f);
-    Ent_3=hcat(zeros(BigFloat,s1,s2),Lam*Eh1f,Lam*Eh2f)
     
-    AugMat=vcat(Ent_1,Ent_2,Ent_3)
-    AugVec=vcat(y,EGGf,zeros(BigFloat,size(Eh1f)))
+    AugMat=vcat(B,B*IDO)
+    AugVec=vcat(y,EGGf)
 
     (Uc,Sc,Vc)=GenericSVD.svd(AugMat);
     Sc=Diagonal{BigFloat}(Sc);
     Scd=pinv(Sc,1e-40);
     Res1=Vc*(Scd*(Uc'*AugVec));
 
-    fc=M*Res1[1:end-2];
+    fc=M*Res1;
     f_AD=fc[428:428+90];
-    uc=M*(IDO*Res1[1:end-2])
+    uc=M*(IDO*Res1)
     u_AD=uc[428:428+90]
 
-    return norm(f_AD-y),norm(u_AD[1:10:end])/norm(y[1:10:end])
+    return norm(f_AD-y),norm(u_AD[1:10:end])/norm(y[1:10:end]),fc, y, uc
 
 end
 

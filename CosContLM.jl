@@ -1,7 +1,8 @@
 using SymPy
 using LinearAlgebra
 using PyPlot
-function CosCont(d,Al,Lam)
+function CosContLM(d,Al,Lam,Mu,N)
+    # N is number of total points, divisible by 9!!
 
 
     include("CosMtx.jl")
@@ -21,8 +22,9 @@ function CosCont(d,Al,Lam)
     
 
     setprecision(200);
-    D=BigFloat(350)/BigFloat(100);
-    A=BigFloat(125)/BigFloat(100);
+    CL=BigFloat(N)/BigFloat(9);
+    D=BigFloat(CL)/BigFloat(2);
+    A=BigFloat(1)/BigFloat(2)*(D-1);
     n=10;
     F=10;
 
@@ -57,26 +59,34 @@ function CosCont(d,Al,Lam)
     for i=1:length(DO[1,:])
         IDO[i,i]=1/DO[i,i];
     end
-    
+
+
+
     
     Ent_1=hcat(B,zeros(BigFloat,s1,2));
     Ent_2=hcat(B*IDO,Eh1f,Eh2f);
     Ent_3=hcat(zeros(BigFloat,s1,s2),Lam*Eh1f,Lam*Eh2f)
+    P=B*IDO
+    P2=B*IDO
+    P2[1:F:end,:]=zeros(BigFloat,length(1:F:s1),s2)
+    US=P-P2;# this is the coarse grid eval of u I THINK
+    Ent_4=hcat(Mu*US,zeros(BigFloat,s1,2))
+
     
-    AugMat=vcat(Ent_1,Ent_2,Ent_3)
-    AugVec=vcat(y,EGGf,zeros(BigFloat,size(Eh1f)))
+    AugMat=vcat(Ent_1,Ent_2,Ent_3,Ent_4)
+    AugVec=vcat(y,EGGf,zeros(BigFloat,size(Eh1f)),zeros(BigFloat,size(Eh1f)))
 
     (Uc,Sc,Vc)=GenericSVD.svd(AugMat);
     Sc=Diagonal{BigFloat}(Sc);
     Scd=pinv(Sc,1e-40);
     Res1=Vc*(Scd*(Uc'*AugVec));
-
+    LL=Int(293)
     fc=M*Res1[1:end-2];
-    f_AD=fc[428:428+90];
+    f_AD=fc[LL:LL+90];
     uc=M*(IDO*Res1[1:end-2])
-    u_AD=uc[428:428+90]
+    u_AD=uc[LL:LL+90]
 
-    return norm(f_AD-y),norm(u_AD[1:10:end])/norm(y[1:10:end])
+    return norm(f_AD-y),norm(u_AD[1:10:end])/norm(y[1:10:end]),fc,uc,Res1[end-1:end]
 
 end
 
