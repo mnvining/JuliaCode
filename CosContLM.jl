@@ -45,7 +45,6 @@ function CosContLM(d,Al,Lam,Mu,N)
     GG(x)=totalGreen(d,n+1,Al,0);
     EGGf=evalasarray(GG(x),xx);
     EG2=evalasarray(GG(x),x2);
-    println(EGGf[1:F:end]-EG2)
     G2=evalasarray(GG(x),xx);
     G2[1:F:end]=zeros(n,1);
     GC=EGGf-G2;
