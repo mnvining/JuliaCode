@@ -2,16 +2,16 @@ using SymPy
 include("All.jl")
 
 function coeffcalc(d,n)
-    x=Sym("x")
+    x=symbols("x")
     exx=fmaker(d,n)
     co=N(exx(x=>0))
     for i=1:d
-        co=vcat(co,N(coeff(exx,x^i)))
+        co=vcat(co,N(exx.coeff(x^i)))
     end
     return co
 end
 
-
+ 
 function fliplr(A)
     (m,n)=size(A)
     N=zeros(BigFloat,size(A))

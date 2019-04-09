@@ -2,7 +2,7 @@
 using GenericSVD
 include("coeffcalc.jl")
 function GreensInt(d,Al,p)
-    x=Sym("x")
+    x=symbols("x")
     if d==0
         return (-exp(-(x+1)/sqrt(Al))-exp(x/sqrt(Al))+exp(-1/sqrt(Al))+1)/(exp(-1/sqrt(Al))+1)
     elseif d==1
@@ -27,10 +27,9 @@ function GreensInt(d,Al,p)
 end
 
 function totalGreen(d,n,Al,p)
-    x=Sym("x")
+    x=symbols("x")
     expr=0*x
     zz=coeffcalc(d,n)
-    println(length(zz))
     for j=1:length(zz)
         m(x)=GreensInt(j-1,Al,p)
         expr=expr+zz[j]*m(x)
