@@ -6,12 +6,12 @@ function coeffcalc(d,n)
     exx=fmaker(d,n)
     co=N(exx(x=>0))
     for i=1:d
-        co=vcat(co,N(exx.coeff(x^i)))
+        co=vcat(co,N(coeff(exx,x^i)))
     end
     return co
 end
 
- 
+
 function fliplr(A)
     (m,n)=size(A)
     N=zeros(BigFloat,size(A))
@@ -23,7 +23,7 @@ function fliplr(A)
 end
 
 function myvander(x)
-    
+
     L=length(x)
     M=zeros(BigFloat,L,L)
     for i=1:L
@@ -31,10 +31,3 @@ function myvander(x)
     end
     return M
 end
-
-    
-
-
-      
-
-        
