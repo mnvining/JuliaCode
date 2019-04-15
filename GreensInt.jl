@@ -18,13 +18,52 @@ function GreensInt(d,Al,p)
     elseif d==6
         return -(720*exp(-1/sqrt(Al))*Al^3-720*Al^3-360*Al^2-30*Al-1)*exp((-x-1)/sqrt(Al))/(-1+(exp(-1/sqrt(Al)))^2)-(720*exp(-1/sqrt(Al))*Al^3-720*Al^3+360*exp(-1/sqrt(Al))*Al^2+30*exp(-1/sqrt(Al))*Al+exp(-1/sqrt(Al)))*exp(x/sqrt(Al))/(-1+(exp(-1/sqrt(Al)))^2)+x^6+30*Al*x^4+360*Al^2*x^2+720*Al^3
     elseif d==7
-        return ((-5040*Al^3-840*Al^2-42*Al-1)*exp(-(x+1)/sqrt(Al))+(5040*Al^3+840*Al^2+42*Al+1)*exp((x-1)/sqrt(Al))+x*(x^6+42*Al*x^4+840*Al^2*x^2+5040*Al^3)*(-1+exp(-2/sqrt(Al))))/(-1+exp(-2/sqrt(Al)))  
+        return ((-5040*Al^3-840*Al^2-42*Al-1)*exp(-(x+1)/sqrt(Al))+(5040*Al^3+840*Al^2+42*Al+1)*exp((x-1)/sqrt(Al))+x*(x^6+42*Al*x^4+840*Al^2*x^2+5040*Al^3)*(-1+exp(-2/sqrt(Al))))/(-1+exp(-2/sqrt(Al)))
     elseif d==8
         return -(40320*exp(-1/sqrt(Al))*Al^4-40320*Al^4-20160*Al^3-1680*Al^2-56*Al-1)*exp((-x-1)/sqrt(Al))/(-1+(exp(-1/sqrt(Al)))^2)-(40320*exp(-1/sqrt(Al))*Al^4-40320*Al^4+20160*exp(-1/sqrt(Al))*Al^3+1680*exp(-1/sqrt(Al))*Al^2+56*exp(-1/sqrt(Al))*Al+exp(-1/sqrt(Al)))*exp(x/sqrt(Al))/(-1+(exp(-1/sqrt(Al)))^2)+x^8+56*Al*x^6+1680*Al^2*x^4+20160*Al^3*x^2+40320*Al^4
-    elseif d==9        
-        return (-362880*Al^4-60480*Al^3-3024*Al^2-72*Al-1)*exp(-(x+1)/sqrt(Al))/(-1+(exp(-1/sqrt(Al)))^2)+exp(-1/sqrt(Al))*(362880*Al^4+60480*Al^3+3024*Al^2+72*Al+1)*exp(x/sqrt(Al))/(-1+(exp(-1/sqrt(Al)))^2)+x^9+72*Al*x^7+3024*Al^2*x^5+60480*Al^3*x^3+362880*x*Al^4   
+    elseif d==9
+        return (-362880*Al^4-60480*Al^3-3024*Al^2-72*Al-1)*exp(-(x+1)/sqrt(Al))/(-1+(exp(-1/sqrt(Al)))^2)+exp(-1/sqrt(Al))*(362880*Al^4+60480*Al^3+3024*Al^2+72*Al+1)*exp(x/sqrt(Al))/(-1+(exp(-1/sqrt(Al)))^2)+x^9+72*Al*x^7+3024*Al^2*x^5+60480*Al^3*x^3+362880*x*Al^4
     end
 end
+
+function PolySol(d,Al)
+x=symbols("x")
+if d==0
+    return x.^0;
+elseif d==1
+    return x.^1;
+elseif d==2
+    return x.^2+2*Al;
+elseif d==3
+    return x.^3+6*Al*x;
+elseif d==4
+    return x.^4+12*Al*x.^2+24*Al^2;
+elseif d==5
+    return x.^5+20*Al*x.^3+120*Al^2*x;
+elseif d==6
+    return x.^6+30*Al*x.^4+360*Al^2*x.^2+720*Al^3;
+elseif d==7
+    return x.^7+42*Al*x.^5+840*Al^2*x.^3+5040*Al^3*x;
+elseif d==8
+    return x.^8+56*Al*x.^6+1680*Al^2*x.^4+20160*Al^3*x.^2+40320*Al^4;
+elseif d==9
+    return x.^9+72*Al*x.^7+3024*Al^2*x.^5+60480*Al^3*x.^3+362880*Al^4*x;
+end
+end
+
+function TotalPoly(d,n,Al)
+x=symbols("x")
+expr=0*x
+zz=coeffcalc(d,n)
+for j=1:length(zz)
+    m(x)=PolySol(j-1,Al)
+    expr=expr+zz[j]*m(x)
+end
+return expr
+end
+
+
+
 
 function totalGreen(d,n,Al,p)
     x=symbols("x")
@@ -36,4 +75,3 @@ function totalGreen(d,n,Al,p)
     end
     return expr
 end
-
