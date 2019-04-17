@@ -17,9 +17,9 @@ function CosContLM(d,Al,Lam,Mu,N)
     include("DiffOp.jl")
     include("GreensInt.jl")
     include("myhouse.jl")
-    
+
     x=Sym("x")
-    
+
 
     setprecision(200);
     CL=BigFloat(N)/BigFloat(9);
@@ -45,13 +45,13 @@ function CosContLM(d,Al,Lam,Mu,N)
     EGGf=evalasarray(GG(x),xx);
     (h1,h2)=hsol(xx,Al,0)
     Eh1f=(evalasarray(h1(x),xx))
-    Eh2f=(evalasarray(h2(x),xx)) 
+    Eh2f=(evalasarray(h2(x),xx))
 
     (M,B,C)=CosMtx(D,A,n,F);
-    
+
     (s1,s2)=size(B);
 
-    
+
     (D1,D2)=CosDer2(D,A,n,F);
 
     DO=DiffOp(D,A,n,F,Al,1);
@@ -62,7 +62,7 @@ function CosContLM(d,Al,Lam,Mu,N)
 
 
 
-    
+
     Ent_1=hcat(B,zeros(BigFloat,s1,2));
     Ent_2=hcat(B*IDO,Eh1f,Eh2f);
     Ent_3=hcat(zeros(BigFloat,s1,s2),Lam*Eh1f,Lam*Eh2f)
@@ -72,7 +72,7 @@ function CosContLM(d,Al,Lam,Mu,N)
     US=P-P2;# this is the coarse grid eval of u I THINK
     Ent_4=hcat(Mu*US,zeros(BigFloat,s1,2))
 
-    
+
     AugMat=vcat(Ent_1,Ent_2,Ent_3,Ent_4)
     AugVec=vcat(y,EGGf,zeros(BigFloat,size(Eh1f)),zeros(BigFloat,size(Eh1f)))
 
@@ -80,7 +80,7 @@ function CosContLM(d,Al,Lam,Mu,N)
     Sc=Diagonal{BigFloat}(Sc);
     Scd=pinv(Sc,1e-40);
     Res1=Vc*(Scd*(Uc'*AugVec));
-    LL=Int(293)
+    LL=Int(428)
     fc=M*Res1[1:end-2];
     f_AD=fc[LL:LL+90];
     uc=M*(IDO*Res1[1:end-2])
@@ -89,4 +89,3 @@ function CosContLM(d,Al,Lam,Mu,N)
     return norm(f_AD-y),norm(u_AD[1:10:end])/norm(y[1:10:end]),fc,uc,Res1[end-1:end]
 
 end
-

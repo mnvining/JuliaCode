@@ -45,13 +45,14 @@ function MinProb(d,Al,Lam,Mu,Gam)
     (h1,h2)=hsol(xx,Al,0)
     Eh1f=(evalasarray(h1(x),xx))
     Eh2f=(evalasarray(h2(x),xx))
+    plot(xx,Eh1f,xx,Eh2f)
 
     if d==0
-    c1=-0.000014098152457
+    c1=-1.060662951145989e-05
     elseif d==1
-    c1=0.000009248317084
+    c1=7.598388219170811e-06
     elseif d==2
-    c1=0.001398898944611
+    c1=0.019142668118492
     elseif d==3
     c1=-0.018604242523930
     elseif d==4
@@ -80,22 +81,25 @@ function MinProb(d,Al,Lam,Mu,Gam)
     Mat1=B*IDO;
     r=setdiff(1:s1,1:10:s1);
     Mat1=Mat1[setdiff(1:end,r),:]
-
     Ent_1=hcat(B,zeros(BigFloat,s1,2));
     Ent_2=hcat(Mu*Mat1,Mu*Al*Eh1f[1:10:end],Mu*Al*Eh2f[1:10:end]);
-    Ent_3=hcat(zeros(BigFloat,s1,s2),Lam*Al*Eh1f,Lam*Al*Eh2f)
+    Ent_3=hcat(zeros(BigFloat,s1,s2),Lam*Eh1f,Lam*Eh2f)
     Ent_4=hcat(Gam*B,zeros(BigFloat,s1,2));
 
     MM=vcat(Ent_1,Ent_2,Ent_3,Ent_4);
-    RHS=vcat(y,BF[1:10:end],0*Eh1f,0*y)
-    #(Um,Sm,Vm)=svd(MM)
-    #SmD=pinv(Sm,1e-40);
-    #SmD=Diagonal{BigFloat}(SmD')
-    #Res=Vm*(SmD*(Um'*(RHS)));
-    Res=MM\RHS;
+    RHS=vcat(y,Mu*BF[1:10:end],0*Eh1f,0*y)
+    (Um,Sm,Vm)=svd(MM)
+    Sm=Diagonal{BigFloat}(Sm);
+    SmD=pinv(Sm,1e-40)
+    Res=Vm*(SmD*(Um'*(RHS)));
+    #Res=MM\RHS;
+    LL=Int(428)
+    fc=M*Res[1:end-2];
+    f_AD=fc[LL:LL+90];
+    uc=M*(IDO*Res[1:end-2])
+    u_AD=uc[LL:LL+90]
 
-
-    return M*Res[1:end-2],Res[end-1:end]
+    return norm(f_AD-y),norm(u_AD[1:10:end])/norm(y[1:10:end]),Res[end-1:end],fc,uc,BF,y,EGGf
 
 
 
