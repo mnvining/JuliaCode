@@ -41,18 +41,17 @@ function MinProb(d,Al,Lam,Mu,Gam)
     y=evalasarray(f(x),xx)
 
     GG(x)=TotalPoly(d,n,Al);
-    EGGf=evalasarray(GG(x),xx);
+    EGGf=evalasarray(-GG(x),xx);
     (h1,h2)=hsol(xx,Al,0)
     Eh1f=(evalasarray(h1(x),xx))
     Eh2f=(evalasarray(h2(x),xx))
-    plot(xx,Eh1f,xx,Eh2f)
 
     if d==0
     c1=-1.060662951145989e-05
     elseif d==1
     c1=7.598388219170811e-06
     elseif d==2
-    c1=0.019142668118492
+    c1=0.001346357060030
     elseif d==3
     c1=-0.018604242523930
     elseif d==4
@@ -63,8 +62,12 @@ function MinProb(d,Al,Lam,Mu,Gam)
     -1.958059513322267
     end
 
-
     BF=EGGf-(-1)^d*c1*Eh1f-c1*Eh2f;
+    plot(xx,BF)
+    figure(2)
+    plot(xx,y-EGGf)
+    figure(3)
+    plot(xx,EGGf.-BF)
 
     (M,B,C)=CosMtx(D,A,n,F);
 
