@@ -6,7 +6,7 @@ function fmaker(d,n)
     include("myhouse.jl")
     x=Sym("x")
     h=BigFloat(1)/BigFloat(n-1);
-    z=collect(BigFloat,-1:h:0);
+    z=collect(BigFloat,-1:h:1);
     A=fliplr(myvander(z))
     (Q,R)=HRQR(A)
     if d==0
@@ -21,7 +21,3 @@ function fmaker(d,n)
         return expr/(R[d+1,d+1])
     end
 end
-
-    
-
-      

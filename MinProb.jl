@@ -35,14 +35,14 @@ function MinProb(d,Al,Lam,Mu,Gam)
     F1=collect(BigFloat,A:hf:D-A);
 
 
-    f(x)=fmaker(d,n+1);
-    xx=linspace(BigFloat(-1),BigFloat(0),Int(F*(n-1)+1));
+    f(x)=fmaker(d,n);
+    xx=linspace(BigFloat(-1),BigFloat(1),Int(F*(n-1)+1));
     y=zeros(BigFloat,size(xx))
     y=evalasarray(f(x),xx)
 
     GG(x)=TotalPoly(d,n,Al);
-    EGGf=evalasarray(-GG(x),xx);
-    (h1,h2)=hsol(xx,Al,0)
+    EGGf=evalasarray(GG(x),xx);
+    (h1,h2)=hsol(xx,Al,1)
     Eh1f=(evalasarray(h1(x),xx))
     Eh2f=(evalasarray(h2(x),xx))
 
@@ -51,7 +51,7 @@ function MinProb(d,Al,Lam,Mu,Gam)
     elseif d==1
     c1=7.598388219170811e-06
     elseif d==2
-    c1=0.001346357060030
+    c1=0.001398898944611
     elseif d==3
     c1=-0.018604242523930
     elseif d==4
@@ -63,11 +63,6 @@ function MinProb(d,Al,Lam,Mu,Gam)
     end
 
     BF=EGGf-(-1)^d*c1*Eh1f-c1*Eh2f;
-    plot(xx,BF)
-    figure(2)
-    plot(xx,y-EGGf)
-    figure(3)
-    plot(xx,EGGf.-BF)
 
     (M,B,C)=CosMtx(D,A,n,F);
 
@@ -95,7 +90,6 @@ function MinProb(d,Al,Lam,Mu,Gam)
     Sm=Diagonal{BigFloat}(Sm);
     SmD=pinv(Sm,1e-40)
     Res=Vm*(SmD*(Um'*(RHS)));
-    #Res=MM\RHS;
     LL=Int(428)
     fc=M*Res[1:end-2];
     f_AD=fc[LL:LL+90];
