@@ -20,5 +20,3 @@ function evalasarray(expr,z)
     end
     return q
 end
-
-        

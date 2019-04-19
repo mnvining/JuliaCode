@@ -47,9 +47,9 @@ function MinProb(d,Al,Lam,Mu,Gam)
     Eh2f=(evalasarray(h2(x),xx))
 
     if d==0
-    c1=-1.060662951145989e-05
+    c1=-1.409815245715622e-05
     elseif d==1
-    c1=7.598388219170811e-06
+    c1=9.248317083713627e-06
     elseif d==2
     c1=0.001398898944611
     elseif d==3
