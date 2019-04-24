@@ -2,6 +2,7 @@ using SymPy
 using LinearAlgebra
 using PyPlot
 using GenericSVD
+using Roots
 function MinProb(d,Al,Lam,Mu,Gam)
 
 
@@ -19,6 +20,7 @@ function MinProb(d,Al,Lam,Mu,Gam)
     include("myhouse.jl")
 
     x=symbols("x")
+    CC=symbols("CC")
 
 
     setprecision(230);
@@ -36,6 +38,7 @@ function MinProb(d,Al,Lam,Mu,Gam)
 
 
     f(x)=fmaker(d,n);
+    println(f(x))
     xx=linspace(BigFloat(-1),BigFloat(1),Int(F*(n-1)+1));
     y=zeros(BigFloat,size(xx))
     y=evalasarray(f(x),xx)
@@ -45,24 +48,32 @@ function MinProb(d,Al,Lam,Mu,Gam)
     (h1,h2)=hsol(xx,Al,1)
     Eh1f=(evalasarray(h1(x),xx))
     Eh2f=(evalasarray(h2(x),xx))
-
-    if d==0
-    c1=-1.409815245715622e-05
-    elseif d==1
-    c1=9.248317083713627e-06
-    elseif d==2
-    c1=0.001398898944611
-    elseif d==3
-    c1=-0.018604242523930
-    elseif d==4
-    c1=-0.126012962108665
-    elseif d==5
-    c1=-0.555408319762897
-    elseif d==6
-    -1.958059513322267
+    println(norm(EGGf[1:10:end]))
+    if norm(EGGf[1:10:end])<=1
+        c1=0
+    else
+        T(CC)=norm(EGGf[1:10:end]-CC*Eh1f[1:10:end]-CC*Eh2f[1:10:end])-(1-Al/1000);
+        c1=find_zero(T,Al)
     end
+    println(c1)
 
-    BF=EGGf-(-1)^d*c1*Eh1f-c1*Eh2f;
+    #if d==0
+    #c1=-1.409815245715622e-05
+    #elseif d==1
+    #c1=9.248317083713627e-06
+    #elseif d==2
+    #c1=0.001398898944611
+    #elseif d==3
+    #c1=-0.018604242523930
+    #elseif d==4
+    #c1=-0.126012962108665
+    #elseif d==5
+    #c1=-0.555408319762897
+    #elseif d==6
+    #-1.958059513322267
+    #end
+
+    BF=EGGf-c1*Eh1f-c1*Eh2f;
 
     (M,B,C)=CosMtx(D,A,n,F);
 
@@ -96,7 +107,7 @@ function MinProb(d,Al,Lam,Mu,Gam)
     uc=M*(IDO*Res[1:end-2])
     u_AD=uc[LL:LL+90]
 
-    return norm(f_AD-y),norm(u_AD[1:10:end])/norm(y[1:10:end]),Res[end-1:end],fc,uc,BF,y,EGGf
+    return norm(f_AD-y),norm(u_AD[1:10:end])/norm(y[1:10:end]),Res[end-1:end],fc,uc,BF[1:10:end],y,EGGf
 
 
 
