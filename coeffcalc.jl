@@ -6,7 +6,7 @@ function coeffcalc(d,n)
     exx=fmaker(d,n)
     co=subs(exx,x,BigFloat(0))
     for i=1:d
-        co=vcat(co,N(coeff(exx,x^i)),68)
+        co=vcat(co,(exx.coeff(x^i)))
     end
     return co
 end
