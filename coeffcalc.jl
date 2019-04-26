@@ -4,9 +4,9 @@ include("All.jl")
 function coeffcalc(d,n)
     x=symbols("x")
     exx=fmaker(d,n)
-    co=N(exx(x=>0))
+    co=subs(exx,x,BigFloat(0))
     for i=1:d
-        co=vcat(co,N(coeff(exx,x^i)))
+        co=vcat(co,N(coeff(exx,x^i)),68)
     end
     return co
 end
