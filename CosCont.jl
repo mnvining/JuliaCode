@@ -1,7 +1,7 @@
 using SymPy
 using LinearAlgebra
 using PyPlot
-function CosCont(d,Al,Lam)
+function CosCont(d)
 
 
     include("CosMtx.jl")
@@ -50,32 +50,16 @@ function CosCont(d,Al,Lam)
     (s1,s2)=size(B);
 
 
-    (D1,D2)=CosDer2(D,A,n,F);
-
-    DO=DiffOp(D,A,n,F,Al,1);
-    IDO=zeros(BigFloat,size(DO))
-    for i=1:length(DO[1,:])
-        IDO[i,i]=1/DO[i,i];
-    end
-
-
-    Ent_1=hcat(B,zeros(BigFloat,s1,2));
-    Ent_2=hcat(B*IDO,Eh1f,Eh2f);
-    Ent_3=hcat(zeros(BigFloat,s1,s2),Lam*Eh1f,Lam*Eh2f)
-
-    AugMat=vcat(Ent_1,Ent_2,Ent_3)
-    AugVec=vcat(y,EGGf,zeros(BigFloat,size(Eh1f)))
-
-    (Uc,Sc,Vc)=GenericSVD.svd(AugMat);
+    (Uc,Sc,Vc)=GenericSVD.svd(B);
     Sc=Diagonal{BigFloat}(Sc);
     Scd=pinv(Sc,1e-40);
-    Res1=Vc*(Scd*(Uc'*AugVec));
+    Res1=Vc*(Scd*(Uc'*y));
 
     fc=M*Res1[1:end-2];
     f_AD=fc[428:428+90];
     uc=M*(IDO*Res1[1:end-2])
     u_AD=uc[428:428+90]
 
-    return norm(f_AD-y),norm(u_AD[1:10:end])/norm(y[1:10:end]),Res1[1:end-2]
+    return norm(f_AD-y),norm(u_AD[1:10:end])/norm(y[1:10:end]),Res1
 
 end
