@@ -52,8 +52,6 @@ function CosContLM(d,Al,Lam,Mu,N)
     (s1,s2)=size(B);
 
 
-    (D1,D2)=CosDer2(D,A,n,F);
-
     DO=DiffOp(D,A,n,F,Al,1);
     IDO=zeros(BigFloat,size(DO))
     for i=1:length(DO[1,:])

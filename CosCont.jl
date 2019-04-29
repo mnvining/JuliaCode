@@ -20,7 +20,7 @@ function CosCont(d)
     x=Sym("x")
 
 
-    setprecision(200);
+    setprecision(230);
     D=BigFloat(350)/BigFloat(100);
     A=BigFloat(125)/BigFloat(100);
     n=10;
@@ -35,15 +35,9 @@ function CosCont(d)
 
 
     f(x)=fmaker(d,n+1);
-    xx=linspace(BigFloat(-1),BigFloat(0),Int(F*(n-1)+1));
+    xx=linspace(BigFloat(-1),BigFloat(1),Int(F*(n-1)+1));
     y=zeros(BigFloat,size(xx))
     y=evalasarray(f(x),xx)
-
-    GG(x)=totalGreen(d,n+1,Al,0);
-    EGGf=evalasarray(GG(x),xx);
-    (h1,h2)=hsol(xx,Al,0)
-    Eh1f=(evalasarray(h1(x),xx))
-    Eh2f=(evalasarray(h2(x),xx))
 
     (M,B,C)=CosMtx(D,A,n,F);
 
@@ -55,11 +49,9 @@ function CosCont(d)
     Scd=pinv(Sc,1e-40);
     Res1=Vc*(Scd*(Uc'*y));
 
-    fc=M*Res1[1:end-2];
+    fc=M*Res1;
     f_AD=fc[428:428+90];
-    uc=M*(IDO*Res1[1:end-2])
-    u_AD=uc[428:428+90]
 
-    return norm(f_AD-y),norm(u_AD[1:10:end])/norm(y[1:10:end]),Res1
+    return maximum(abs.((f_AD-y))),Res1,fc
 
 end
