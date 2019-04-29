@@ -49,8 +49,7 @@ function SinCont(d)
 
     fc=M*Res1;
     f_AD=fc[428:428+90];
-    uc=M*(IDO*Res1[1:end-2])
-    u_AD=uc[428:428+90]
+
 
     return maximum(abs.(f_AD-y)),Res1,fc
 
