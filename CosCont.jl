@@ -1,7 +1,7 @@
 using SymPy
 using LinearAlgebra
 using PyPlot
-function CosCont(d,Al,Lam)
+function CosCont(d)
 
 
     include("CosMtx.jl")
@@ -16,11 +16,11 @@ function CosCont(d,Al,Lam)
     include("DiffOp.jl")
     include("GreensInt.jl")
     include("myhouse.jl")
-    
-    x=Sym("x")
-    
 
-    setprecision(200);
+    x=Sym("x")
+
+
+    setprecision(230);
     D=BigFloat(350)/BigFloat(100);
     A=BigFloat(125)/BigFloat(100);
     n=10;
@@ -35,48 +35,23 @@ function CosCont(d,Al,Lam)
 
 
     f(x)=fmaker(d,n+1);
-    xx=linspace(BigFloat(-1),BigFloat(0),Int(F*(n-1)+1));
+    xx=linspace(BigFloat(-1),BigFloat(1),Int(F*(n-1)+1));
     y=zeros(BigFloat,size(xx))
     y=evalasarray(f(x),xx)
 
-    GG(x)=totalGreen(d,n+1,Al,0);
-    EGGf=evalasarray(GG(x),xx);
-    (h1,h2)=hsol(xx,Al,0)
-    Eh1f=(evalasarray(h1(x),xx))
-    Eh2f=(evalasarray(h2(x),xx)) 
-
     (M,B,C)=CosMtx(D,A,n,F);
-    
+
     (s1,s2)=size(B);
 
-    
-    (D1,D2)=CosDer2(D,A,n,F);
 
-    DO=DiffOp(D,A,n,F,Al,1);
-    IDO=zeros(BigFloat,size(DO))
-    for i=1:length(DO[1,:])
-        IDO[i,i]=1/DO[i,i];
-    end
-    
-    
-    Ent_1=hcat(B,zeros(BigFloat,s1,2));
-    Ent_2=hcat(B*IDO,Eh1f,Eh2f);
-    Ent_3=hcat(zeros(BigFloat,s1,s2),Lam*Eh1f,Lam*Eh2f)
-    
-    AugMat=vcat(Ent_1,Ent_2,Ent_3)
-    AugVec=vcat(y,EGGf,zeros(BigFloat,size(Eh1f)))
-
-    (Uc,Sc,Vc)=GenericSVD.svd(AugMat);
+    (Uc,Sc,Vc)=GenericSVD.svd(B);
     Sc=Diagonal{BigFloat}(Sc);
     Scd=pinv(Sc,1e-40);
-    Res1=Vc*(Scd*(Uc'*AugVec));
+    Res1=Vc*(Scd*(Uc'*y));
 
-    fc=M*Res1[1:end-2];
+    fc=M*Res1;
     f_AD=fc[428:428+90];
-    uc=M*(IDO*Res1[1:end-2])
-    u_AD=uc[428:428+90]
 
-    return norm(f_AD-y),norm(u_AD[1:10:end])/norm(y[1:10:end])
+    return maximum(abs.((f_AD-y))),Res1,fc,Fine,Coarse,y
 
 end
-

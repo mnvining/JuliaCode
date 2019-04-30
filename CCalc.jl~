@@ -1,0 +1,18 @@
+function CCalc(d,Al)
+
+if d==0
+   return 0
+elseif d==1
+       return 1.692305251690021e4*Al^2;
+elseif d==2
+       return 2.061233765726649e4*Al^2
+elseif d==3
+       return -4.904383247098996e2*Al^2
+elseif d==4
+       return -2.590755351290984e3*Al^2
+elseif d==5
+elseif d==6
+elseif d==7
+elseif d==8
+elseif d==9
+end

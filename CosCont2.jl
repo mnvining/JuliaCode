@@ -17,7 +17,7 @@ function CosCont2(d,Al,Lam)
     include("GreensInt.jl")
     include("myhouse.jl")
     
-    x=Sym("x")
+    x=symbols("x")
     
 
     setprecision(200);
@@ -43,7 +43,11 @@ function CosCont2(d,Al,Lam)
     EGGf=evalasarray(GG(x),xx);
     (h1,h2)=hsol(xx,Al,0)
     Eh1f=(evalasarray(h1(x),xx))
-    Eh2f=(evalasarray(h2(x),xx)) 
+    Eh2f=(evalasarray(h2(x),xx))
+
+    c1=CCalc(d,Al)
+
+    BF=EGGf-(-1)^d*c1*Eh1f-c1*Eh2f;
 
     (M,B,C)=CosMtx(D,A,n,F);
     
@@ -59,12 +63,12 @@ function CosCont2(d,Al,Lam)
     end
     
     
-    Ent_1=hcat(B,zeros(BigFloat,s1,2));
+   Ent_1=hcat(B,zeros(BigFloat,s1,2));
     Ent_2=hcat(B*IDO,Eh1f,Eh2f);
-    Ent_3=hcat(zeros(BigFloat,s1,s2),Lam*Eh1f,Lam*Eh2f)
-    
+    Ent_3=hcat(zeros(BigFloat,s1,s2),Lam*c1*Eh1f,Lam*c1*Eh2f)
+   # Ent_2=hcat(B*IDO,zeros(BigFloat,s1,2));
     AugMat=vcat(Ent_1,Ent_2,Ent_3)
-    AugVec=vcat(y,EGGf,zeros(BigFloat,size(Eh1f)))
+    AugVec=vcat(y,BF,zeros(BigFloat,size(Eh1f)))
 
     (Uc,Sc,Vc)=GenericSVD.svd(AugMat);
     Sc=Diagonal{BigFloat}(Sc);
@@ -76,7 +80,7 @@ function CosCont2(d,Al,Lam)
     uc=M*(IDO*Res1[1:end-2])
     u_AD=uc[428:428+90]
 
-    return norm(f_AD-y),norm(u_AD[1:10:end])/norm(y[1:10:end]),fc, y, uc, EGGf,Res1[end-1:end]
+    return norm(f_AD-y),norm(u_AD[1:10:end])/norm(y[1:10:end]),fc,Res1[end-1:end],c1
 
 end
 

@@ -2,11 +2,11 @@ using SymPy
 include("All.jl")
 
 function coeffcalc(d,n)
-    x=Sym("x")
+    x=symbols("x")
     exx=fmaker(d,n)
-    co=N(exx(x=>0))
+    co=subs(exx,x,BigFloat(0))
     for i=1:d
-        co=vcat(co,N(coeff(exx,x^i)))
+        co=vcat(co,(exx.coeff(x^i)))
     end
     return co
 end
@@ -23,7 +23,7 @@ function fliplr(A)
 end
 
 function myvander(x)
-    
+
     L=length(x)
     M=zeros(BigFloat,L,L)
     for i=1:L
@@ -31,10 +31,3 @@ function myvander(x)
     end
     return M
 end
-
-    
-
-
-      
-
-        

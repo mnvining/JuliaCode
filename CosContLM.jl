@@ -50,24 +50,18 @@ function CosContLM(d,Al,Lam,Mu,N)
     GC=EGGf-G2;
     (h1,h2)=hsol(xx,Al,0)
     Eh1f=(evalasarray(h1(x),xx))
-    T1=evalasarray(h1(x),xx)
-    T1[1:F:end]=zeros(n,1);
-    E1c=Eh1f-T1;
     Eh2f=(evalasarray(h2(x),xx))
-    T2=evalasarray(h2(x),xx)
-    T2[1:F:end]=zeros(n,1);
-    E2c=Eh2f-T2;
 
     (M,B,C)=CosMtx(D,A,n,F);
 
     (s1,s2)=size(B);
+
 
     DO=DiffOp(D,A,n,F,Al,1);
     IDO=zeros(BigFloat,size(DO))
     for i=1:length(DO[1,:])
         IDO[i,i]=1/DO[i,i];
     end
-
 
 
 
@@ -82,10 +76,8 @@ function CosContLM(d,Al,Lam,Mu,N)
     Ent_4=hcat(US,E1c,E2c)
 
 
-    #AugMat=vcat(Ent_1,Ent_2,Ent_3,Ent_4)
-    AugMat=vcat(Ent_1,Ent_4,Ent_3)
-    #AugVec=vcat(y,EGGf,zeros(BigFloat,size(Eh1f)),zeros(BigFloat,size(Eh1f)))
-    AugVec=vcat(y,GC,zeros(BigFloat,size(Eh1f)))
+    AugMat=vcat(Ent_1,Ent_2,Ent_3,Ent_4)
+    AugVec=vcat(y,EGGf,zeros(BigFloat,size(Eh1f)),zeros(BigFloat,size(Eh1f)))
 
     (Uc,Sc,Vc)=GenericSVD.svd(AugMat);
     Sc=Diagonal{BigFloat}(Sc);
