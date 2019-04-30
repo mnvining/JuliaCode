@@ -1,5 +1,8 @@
 include("CosCont.jl")
 include("SinCont.jl")
+include("DiffOp.jl")
+include("CosMtx.jl")
+include("SinMtx.jl")
 using DelimitedFiles
 
 Al=BigFloat(0.01);
@@ -54,3 +57,6 @@ end
 open("SinDiffOp.txt","w") do l
     writedlm(l,IDOS)
 end
+
+(m,C_C,n)=CosMtx(D,A,n,F);
+(mm,C_S,nn)=SinMtx(D,A,n,F);
