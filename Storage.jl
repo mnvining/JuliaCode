@@ -42,5 +42,5 @@ for i=1:length(DOS[1,:])
     IDOS[i,i]=1/DOS[i,i];
 end
 
-(m,C_C,n)=CosMtx(D,A,n,F);
-(mm,C_S,nn)=SinMtx(D,A,n,F);
+(m,C_C,k)=CosMtx(D,A,n,F);
+(mm,C_S,kk)=SinMtx(D,A,n,F);
