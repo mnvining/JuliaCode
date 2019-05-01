@@ -1,8 +1,10 @@
 # Run only after running Storage.jl
 using GenericSVD
 
-(U,S,V)=GenericSVD.svd(C)
-S_Full=Diagonal{BigFloat}(S)
+(Uc,Sc,Vc)=GenericSVD.svd(C_C)
+(Us,Ss,Vs)=GenericSVD.svd(C_S)
+Sc_Full=Diagonal{BigFloat}(Sc)
+Ss_Full=Diagonal{BigFloat}(Ss)
 w=1
 tol=1e-16 # working tolerance for sing value contribution
 P=V'*(D_Dag.^2*(V))+w*(1/tol^2)*S_Full.^2;
