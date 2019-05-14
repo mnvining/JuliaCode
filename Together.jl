@@ -13,7 +13,7 @@ D_Dag=vcat(Ent_1,Ent_2)
 S_Full=Diagonal{BigFloat}(S);
 
 w=1
-tol=1 # working tolerance for sing value contribution
+tol=1e-13 # working tolerance for sing value contribution
 
 P=V'*(D_Dag.^2*(V))+w*(1/tol^2)*S_Full.^2;
 u=-D_Dag*f_c;

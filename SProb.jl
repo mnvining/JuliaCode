@@ -8,10 +8,10 @@ fs=FCMatS[:,1]
 Sc_Full=Diagonal{BigFloat}(Sc)
 Ss_Full=Diagonal{BigFloat}(Ss)
 w=1
-tol=1 # working tolerance for sing value contribution
+tol=1e-60 # working tolerance for sing value contribution
 
-Pc=Vc'*(IDOC.^2*(Vc))+w*(1/tol^2)*Sc_Full.^2;
-Ps=Vs'*(IDOS.^2*(Vs))+w*(1/tol^2)*Ss_Full.^2;
+Pc=Vc'*(IDOC.^2*(Vc))+w*(1/tol^2)*(Sc_Full'*Sc_Full);
+Ps=Vs'*(IDOS.^2*(Vs))+w*(1/tol^2)*(Ss_Full'*Ss_Full);
 uc=-IDOC*fc;
 us=-IDOS*fs;
 qc=-Vc'*IDOC'*uc;
