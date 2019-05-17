@@ -4,7 +4,7 @@ function CosMtx(D,A,n,F)
     # n = number of points, coarse grid
     # F = mult. factor coarse to fine grid
 
-    
+
     hc=BigFloat(1)/BigFloat((n-1));
     Coarse=collect(BigFloat,-D+hc:hc:D)
     Coarse=Coarse.-(BigFloat(5)/BigFloat(90))
@@ -28,10 +28,7 @@ function CosMtx(D,A,n,F)
     for i=1:LF
         C[:,i]=cos.((i-1)*Fine/D*pi)
     end
-    
+
 
     return M,B,C
 end
-
-    
-    

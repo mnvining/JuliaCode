@@ -5,13 +5,15 @@ include("CosMtx.jl")
 include("SinMtx.jl")
 using DelimitedFiles
 
+
+setprecision(230)
 Al=BigFloat(0.01);
 D=BigFloat(350)/BigFloat(100);
 A=BigFloat(125)/BigFloat(100);
 n=10;
 F=10;
 
-setprecision(230)
+
 FCMat=zeros(BigFloat,31,10)
 AMat=zeros(BigFloat,10,1)
 FCMatS=zeros(BigFloat,30,10)

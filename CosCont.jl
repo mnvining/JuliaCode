@@ -34,7 +34,7 @@ function CosCont(d)
     F1=collect(BigFloat,A:hf:D-A);
 
 
-    f(x)=fmaker(d,n+1);
+    f(x)=fmaker(d,n);
     xx=linspace(BigFloat(-1),BigFloat(1),Int(F*(n-1)+1));
     y=zeros(BigFloat,size(xx))
     y=evalasarray(f(x),xx)
