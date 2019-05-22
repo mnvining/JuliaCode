@@ -1,24 +1,34 @@
 using GenericSVD
 
-function MP(d,w,FCMat,FCMatS,C_C,C_S,IDOC,IDOS)
-ffc=copy(FCMat[:,d+1])
+function MP(d,w,FCMatC,FCMatS,C_C,C_S,IDOC,IDOS)
+ffc=copy(FCMatC[:,d+1])
 ffs=copy(FCMatS[:,d+1])
 
 (Uc,Sc,Vc)=GenericSVD.svd(C_C)
 (Us,Ss,Vs)=GenericSVD.svd(C_S)
 Sc_Full=Diagonal{BigFloat}(Sc)
 Ss_Full=Diagonal{BigFloat}(Ss)
+(s1,s2)=size(Sc_Full);
+(s11,s12)=size(Ss_Full)
+Sc_Full=copy(Sc_Full)+zeros(BigFloat,s1,s2)
+Ss_Full=copy(Ss_Full)+zeros(BigFloat,s11,s12)
 
-MatC=vcat(IDOC'*(IDOC*Vc),w*Sc_Full);
-MatS=vcat(IDOS'*(IDOS*Vs),w*Ss_Full);
+
+
+MatC=vcat((IDOC*Vc),w*Sc_Full);
+MatS=vcat((IDOS*Vs),w*Ss_Full);
+println(typeof(MatC))
 
 Rc=vcat(IDOC*ffc,zeros(BigFloat,size(IDOC*ffc)));
 Rs=vcat(IDOS*ffs,zeros(BigFloat,size(IDOS*ffs)));
 
 Gc=MatC\Rc;
-Gs=MatS\Rs;
+Gs=MatS\Rs
 
-yc=C_C*IDOC*(ffc-Vc*Gc);
-ys=C_S*IDOS*(ffs-Vs*Gs;
+println(rank(IDOC))
+println(size(IDOC))
+
+yc=(ffc-Vc*Gc);
+ys=(ffs-Vs*Gs);
 return yc,ys
 end
