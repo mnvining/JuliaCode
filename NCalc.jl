@@ -12,6 +12,7 @@ function NCalc(d,w,FCMatC,FCMatS,C_C,C_S,IDOC,IDOS,m,mm)
   A=BigFloat(125)/BigFloat(100);
   n=10;
   F=10;
+  x=Sym("x")
 
   f(x)=fmaker(d,n);
   xx=linspace(BigFloat(-1),BigFloat(1),Int(F*(n-1)+1));
@@ -25,5 +26,5 @@ function NCalc(d,w,FCMatC,FCMatS,C_C,C_S,IDOC,IDOS,m,mm)
   us=C_S*IDOS*ys;
   CStab=norm(uc[1:10:end])
   SStab=norm(us[1:10:end])
-  return CAcc,SAcc,uc,us
+  return CAcc,SAcc,CStab,SStab
 end

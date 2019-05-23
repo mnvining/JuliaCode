@@ -15,18 +15,14 @@ Ss_Full=copy(Ss_Full)+zeros(BigFloat,s11,s12)
 
 
 
-MatC=vcat((IDOC*Vc),w*Sc_Full);
-MatS=vcat((IDOS*Vs),w*Ss_Full);
-println(typeof(MatC))
+MatC=vcat((C_C[1:10:end]*IDOC*Vc),w*Sc_Full);
+MatS=vcat((C_S[1:10:end]*IDOS*Vs),w*Ss_Full);
 
-Rc=vcat(IDOC*ffc,zeros(BigFloat,size(IDOC*ffc)));
-Rs=vcat(IDOS*ffs,zeros(BigFloat,size(IDOS*ffs)));
+Rc=vcat(C_C[1:10:end]*IDOC*ffc,zeros(BigFloat,size(IDOC*ffc)));
+Rs=vcat(C_S[1:10:end]*IDOS*ffs,zeros(BigFloat,size(IDOS*ffs)));
 
 Gc=MatC\Rc;
 Gs=MatS\Rs
-
-println(rank(IDOC))
-println(size(IDOC))
 
 yc=(ffc-Vc*Gc);
 ys=(ffs-Vs*Gs);
