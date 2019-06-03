@@ -15,11 +15,11 @@ Ss_Full=copy(Ss_Full)+zeros(BigFloat,s11,s12)
 
 
 
-MatC=vcat((C_C[1:10:end]*IDOC*Vc),w*Sc_Full);
-MatS=vcat((C_S[1:10:end]*IDOS*Vs),w*Ss_Full);
+MatC=vcat((C_C[1:10:end,:]*IDOC*Vc),w*Sc_Full);
+MatS=vcat((C_S[1:10:end,:]*IDOS*Vs),w*Ss_Full);
 
-Rc=vcat(C_C[1:10:end]*IDOC*ffc,zeros(BigFloat,size(IDOC*ffc)));
-Rs=vcat(C_S[1:10:end]*IDOS*ffs,zeros(BigFloat,size(IDOS*ffs)));
+Rc=vcat(C_C[1:10:end,:]*IDOC*ffc,zeros(BigFloat,size(IDOC*ffc)));
+Rs=vcat(C_S[1:10:end,:]*IDOS*ffs,zeros(BigFloat,size(IDOS*ffs)));
 
 Gc=MatC\Rc;
 Gs=MatS\Rs
