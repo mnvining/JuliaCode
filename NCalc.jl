@@ -6,7 +6,7 @@ function NCalc(d,w,FCMatC,FCMatS,C_C,C_S,IDOC,IDOS,m,mm)
   include("MP.jl")
   include("All.jl")
   include("Spaces.jl")
-  (yc,ys)=MP(d,w,FCMatC,FCMatS,C_C,C_S,IDOC,IDOS)
+  (yc,ys,Gc,Gs)=MP(d,w,FCMatC,FCMatS,C_C,C_S,IDOC,IDOS)
   setprecision(230);
   D=BigFloat(350)/BigFloat(100);
   A=BigFloat(125)/BigFloat(100);
@@ -24,7 +24,7 @@ function NCalc(d,w,FCMatC,FCMatS,C_C,C_S,IDOC,IDOS,m,mm)
 
   uc=C_C*IDOC*yc;
   us=C_S*IDOS*ys;
-  CStab=norm(uc[1:10:end])
-  SStab=norm(us[1:10:end])
+  CStab=norm(uc[1:10:end])/norm(y[1:10:end])
+  SStab=norm(us[1:10:end])/norm(y[1:10:end])
   return CAcc,SAcc,CStab,SStab
 end

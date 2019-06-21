@@ -26,5 +26,5 @@ Gs=MatS\Rs
 
 yc=(ffc-Vc*Gc);
 ys=(ffs-Vs*Gs);
-return yc,ys
+return yc,ys,Gc,Gs
 end

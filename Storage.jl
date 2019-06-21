@@ -7,7 +7,8 @@ using DelimitedFiles
 
 
 setprecision(230)
-Al=BigFloat(0.000001);
+Al=BigFloat(1)/BigFloat(1000);
+# al = 1e-3
 D=BigFloat(350)/BigFloat(100);
 A=BigFloat(125)/BigFloat(100);
 n=10;

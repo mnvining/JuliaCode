@@ -1,12 +1,12 @@
 include("NCalc.jl")
-CAM=zeros(20,10)
-SAM=zeros(20,10)
-UCM=zeros(20,10)
-USM=zeros(20,10)
+CAM9=zeros(40,1)
+SAM9=zeros(40,1)
+UCM9=zeros(40,1)
+USM9=zeros(40,1)
+LL=collect(BigFloat,-10:29)
 
-for i=0:9
-    for j=-1:18
-  (CAM[j+2,i+1],SAM[j+2,i+1],UCM[j+2,i+1],USM[j+2,i+1])=NCalc(i,10.0^j,FCMat,FCMatS,C_C,C_S,IDOC,IDOS,m,mm);
+
+    for j=-10:29
+  (CAM9[j+11],SAM9[j+11],UCM9[j+11],USM9[j+11])=NCalc(9,10 .^LL[j+11],FCMat,FCMatS,C_C,C_S,IDOC,IDOS,m,mm);
     println(j)
     end
-end
