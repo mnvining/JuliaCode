@@ -1,0 +1,20 @@
+using GenericSVD
+include("MP.jl")
+include("NCalc.jl")
+include("DiffOp.jl")
+include("IDOCalc.jl")
+
+
+Al=1e-6;
+
+(IDOC,IDOS)=IDOCalc(Al)
+DComp=zeros(BigFloat,size(IDOC))
+
+(m,n)=size(IDOC)
+for i=1:m
+    DComp[i,i]=1-Al*(i-1)^2*pi^2/D^2
+end
+
+F1=C_C*IDOC*FCMat[:,1];
+F2=C_C*DComp*FCMat[:,1];
+norm(F1-F2)

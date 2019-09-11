@@ -21,8 +21,20 @@ MatS=vcat((C_S[1:10:end,:]*IDOS*Vs),w*Ss_Full);
 Rc=vcat(C_C[1:10:end,:]*IDOC*ffc,zeros(BigFloat,size(IDOC*ffc)));
 Rs=vcat(C_S[1:10:end,:]*IDOS*ffs,zeros(BigFloat,size(IDOS*ffs)));
 
-Gc=MatC\Rc;
-Gs=MatS\Rs
+#Gc=MatC\Rc;
+#Gs=MatS\Rs;
+
+(U,S,V)=GenericSVD.svd(MatC);
+(U2,S2,V2)=GenericSVD.svd(MatS);
+S=Diagonal{BigFloat}(S);
+Sd=pinv(S,1e-7);
+S2=Diagonal{BigFloat}(S2);
+S2d=pinv(S2,1e-11);
+
+Gc=V*Sd*U'*Rc;
+Gs=V2*S2d*U2'*Rs;
+
+
 
 yc=(ffc-Vc*Gc);
 ys=(ffs-Vs*Gs);

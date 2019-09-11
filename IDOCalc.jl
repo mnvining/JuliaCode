@@ -13,10 +13,10 @@ F=10;
   IDOC=zeros(BigFloat,size(DOC))
   IDOS=zeros(BigFloat,size(DOS))
   for i=1:length(DOC[:,1])
-    IDOC[i,i]=1/DOC[i,i]
+    IDOC[i,i]=BigFloat(1)/DOC[i,i]
   end
   for i=1:length(DOS[:,1])
-    IDOS[i,i]=1/DOS[i,i]
+    IDOS[i,i]=BigFloat(1)/DOS[i,i]
   end
 return(IDOC,IDOS)
 end
