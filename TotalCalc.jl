@@ -1,5 +1,5 @@
 using GenericSVD
-function TotalCalc(d,w,FCMatC,FCMatS,C_C,C_S,IDOC,IDOS)
+function TotalCalc(d,w,tol,FCMatC,FCMatS,C_C,C_S,IDOC,IDOS,m,mm)
     ffc=copy(FCMatC[:,d+1])
     ffs=copy(FCMatS[:,d+1])
 
@@ -32,9 +32,9 @@ function TotalCalc(d,w,FCMatC,FCMatS,C_C,C_S,IDOC,IDOS)
     (U,S,V)=GenericSVD.svd(MatC);
     (U2,S2,V2)=GenericSVD.svd(MatS);
     S=Diagonal{BigFloat}(S);
-    Sd=pinv(S,1e-7);
+    Sd=pinv(S,tol);
     S2=Diagonal{BigFloat}(S2);
-    S2d=pinv(S2,1e-11);
+    S2d=pinv(S2,tol);
 
     Gc=V*Sd*U'*Rc;
     Gs=V2*S2d*U2'*Rs;
@@ -52,10 +52,10 @@ function TotalCalc(d,w,FCMatC,FCMatS,C_C,C_S,IDOC,IDOS)
     CAcc=maximum(abs.(C_C*yc.-y));
     SAcc=maximum(abs.(C_S*ys.-y));
 
-uc=C_C*IDOC*yc;
-us=C_S*IDOS*ys;
-CStab=norm(uc[1:10:end])/norm(y[1:10:end])
-SStab=norm(us[1:10:end])/norm(y[1:10:end])
+    uc=C_C*IDOC*yc;
+    us=C_S*IDOS*ys;
+    CStab=norm(uc[1:10:end])/norm(y[1:10:end])
+    SStab=norm(us[1:10:end])/norm(y[1:10:end])
 
-return CStab,SStab,CAcc,SAcc, maximum(C_C*yc),maximum(C_S*ys)
+    return CStab,SStab,CAcc,SAcc, maximum(m*yc),maximum(mm*ys)
 end
