@@ -57,5 +57,5 @@ function TotalCalc(d,w,tol,FCMatC,FCMatS,C_C,C_S,IDOC,IDOS,m,mm)
     CStab=norm(uc[1:10:end])/norm(y[1:10:end])
     SStab=norm(us[1:10:end])/norm(y[1:10:end])
 
-    return CStab,SStab,CAcc,SAcc, maximum(m*yc),maximum(mm*ys)
+    return CStab,SStab,CAcc,SAcc, maximum(abs.(m*yc)),maximum(abs.(mm*ys))
 end
