@@ -1,11 +1,3 @@
-include("CosCont.jl")
-include("SinCont.jl")
-include("DiffOp.jl")
-include("CosMtx.jl")
-include("SinMtx.jl")
-using DelimitedFiles
-
-
 setprecision(230)
 Al=BigFloat(1)/BigFloat(1000);
 # al = 1e-3

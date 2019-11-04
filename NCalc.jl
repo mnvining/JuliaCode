@@ -1,11 +1,4 @@
-using SymPy
-using LinearAlgebra
-using GenericSVD
-
 function NCalc(d,w,FCMatC,FCMatS,C_C,C_S,IDOC,IDOS,m,mm,tol)
-  include("MP.jl")
-  include("All.jl")
-  include("Spaces.jl")
   (yc,ys,Gc,Gs)=MP(d,w,FCMatC,FCMatS,C_C,C_S,IDOC,IDOS,tol)
   setprecision(230);
   D=BigFloat(350)/BigFloat(100);

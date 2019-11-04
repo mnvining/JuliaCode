@@ -1,4 +1,3 @@
-using GenericSVD
 function TotalCalc(d,w,tol,FCMatC,FCMatS,C_C,C_S,IDOC,IDOS,m,mm)
     ffc=copy(FCMatC[:,d+1])
     ffs=copy(FCMatS[:,d+1])

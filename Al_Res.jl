@@ -9,5 +9,5 @@ for i=1:length(Al)
     L=hcat(Al[i],d)
         z=vcat(z,L)
     end
-    
+
 end

@@ -1,22 +1,5 @@
-using SymPy
-using LinearAlgebra
-using PyPlot
+using GenericSVD
 function CosCont(d)
-
-
-    include("CosMtx.jl")
-    include("CosDer.jl")
-    include("CosDer2.jl")
-    include("All.jl")
-    include("ConvertToBig.jl")
-    include("hsol.jl")
-    include("Spaces.jl")
-    include("dftmtx.jl")
-    include("coeffcalc.jl")
-    include("DiffOp.jl")
-    include("GreensInt.jl")
-    include("myhouse.jl")
-
     x=Sym("x")
 
 

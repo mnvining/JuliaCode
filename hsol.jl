@@ -1,4 +1,3 @@
-using SymPy
 function hsol(z,Al,p)
     # z is grid of pts
     x=Sym("x")

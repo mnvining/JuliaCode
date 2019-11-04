@@ -1,8 +1,4 @@
-using LinearAlgebra
-using SymPy
-using GenericSVD
 function IDOCalc(Al)
-include("DiffOp.jl")
 setprecision(230);
 D=BigFloat(350)/BigFloat(100);
 A=BigFloat(125)/BigFloat(100);

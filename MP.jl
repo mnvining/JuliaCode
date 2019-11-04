@@ -1,5 +1,3 @@
-using GenericSVD
-
 function MP(d,w,FCMatC,FCMatS,C_C,C_S,IDOC,IDOS,tol)
     ffc=copy(FCMatC[:,d+1])
     ffs=copy(FCMatS[:,d+1])
@@ -13,7 +11,7 @@ function MP(d,w,FCMatC,FCMatS,C_C,C_S,IDOC,IDOS,tol)
     Sc_Full=copy(Sc_Full)+zeros(BigFloat,s1,s2)
     Ss_Full=copy(Ss_Full)+zeros(BigFloat,s11,s12)
 
-    
+
 
     MatC=vcat((C_C[1:10:end,:]*IDOC*Vc),w*Sc_Full);
     MatS=vcat((C_S[1:10:end,:]*IDOS*Vs),w*Ss_Full);
