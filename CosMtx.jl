@@ -7,7 +7,7 @@ function CosMtx(D,A,n,F)
 
     hc=BigFloat(1)/BigFloat((n-1));
     Coarse=collect(BigFloat,-D+hc:hc:D)
-    Coarse=Coarse.-(BigFloat(5)/BigFloat(90))
+    Coarse=Coarse.-BigFloat(5)/BigFloat(90)
     LC=length(Coarse)
     hf=BigFloat(1)/(BigFloat((n-1))*BigFloat(F));
     Fine=collect(BigFloat,-D+hf:hf:D)

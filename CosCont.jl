@@ -14,7 +14,9 @@ function CosCont(d)
     LC=length(Coarse)
     hf=BigFloat(1)/BigFloat((n-1)*F);
     Fine=collect(BigFloat,-D+hf:hf:D)
+    Fine=Fine.-BigFloat(5)/BigFloat(900)
     F1=collect(BigFloat,A:hf:D-A);
+    println(Fine[428])
 
 
     f(x)=fmaker(d,n);

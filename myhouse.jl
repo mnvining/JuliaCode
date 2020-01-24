@@ -7,16 +7,16 @@ function myhouse(x)
     if (s==0) & (x[1]>=0)
         b=0
     elseif (s==0) & (x[1]<0)
-        b=-2 
-    else  
+        b=-2
+    else
         mu=sqrt(x[1]^2+s)
         if (x[1]<=0)
-            v[1]=x[1]-mu   
-        else   
-            v[1]=-s/(x[1]+mu)    
-        end 
-        b=2*v[1]^2/(s+v[1]^2) 
-        v=v/v[1]  
+            v[1]=x[1]-mu
+        else
+            v[1]=-s/(x[1]+mu)
+        end
+        b=2*v[1]^2/(s+v[1]^2)
+        v=v/v[1]
     end
     return v,b
 end
@@ -42,16 +42,16 @@ function HRQR(A)
     for i = 1:m
         Pr[i,i:n]=A2[i,i:n]
     end
-    
+
     Q2=Q2[:,1:n];
     for j=n:-1:1
         V=zeros(BigFloat,m,1);
         V[j:m]=vcat(1,A2[j+1:m,j]);
         B=2/(1+norm(A2[j+1:m,j],2)^2);
         Q2[j:m,j:n]=Q2[j:m,j:n]-B*(V[j:m]*V[j:m]')*Q2[j:m,j:n]
-    end                             
+    end
     R=Pr;
-    
+
     return Q1[:,1:n],R[1:n,1:n]
 
 end
@@ -79,8 +79,3 @@ function SolveViaQR(A,b)
     x=BackSolve(R,yy)
     return x,yy
 end
-
-
-
-        
-
