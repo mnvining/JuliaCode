@@ -4,19 +4,20 @@ function CosCont(d)
 
 
     setprecision(230);
-    D=BigFloat(350)/BigFloat(100);
-    A=BigFloat(125)/BigFloat(100);
+    D=BigFloat(4);
+    A=BigFloat(52)/BigFloat(35);
     n=10;
     F=10;
 
-    hc=BigFloat(1)/BigFloat(n-1);
+    hc=BigFloat(4)/BigFloat((35));
     Coarse=collect(BigFloat,-D+hc:hc:D)
+    #Coarse=Coarse.-BigFloat(5)/BigFloat(90)
     LC=length(Coarse)
-    hf=BigFloat(1)/BigFloat((n-1)*F);
-    Fine=collect(BigFloat,-D+hf:hf:D)
-    Fine=Fine.-BigFloat(5)/BigFloat(900)
+    hf=BigFloat(hc)/(BigFloat(F));
+    Fine=collect(BigFloat,-D+hc:hf:D)
+    #Fine=Fine.-(BigFloat(5)/BigFloat(900));
     F1=collect(BigFloat,A:hf:D-A);
-    println(Fine[428])
+
 
 
     f(x)=fmaker(d,n);
@@ -27,6 +28,7 @@ function CosCont(d)
     (M,B,C)=CosMtx(D,A,n,F);
 
     (s1,s2)=size(B);
+    println(size(B))
 
 
     (Uc,Sc,Vc)=GenericSVD.svd(B);

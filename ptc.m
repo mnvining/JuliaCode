@@ -11,6 +11,4 @@ function C=ptc(y,d,CMatrix)
 
 % loads the even coefficients for degrees 0:8
 p=CMatrix(1:10,1:d+1);
-size(p)
-size(y)
 C=p\y;

@@ -4,16 +4,16 @@ function SinMtx(D,A,n,F)
     # n = number of points, coarse grid
     # F = mult. factor coarse to fine grid
 
-    
-    hc=BigFloat(1)/BigFloat((n-1));
+
+    hc=BigFloat(4)/BigFloat((35));
     Coarse=collect(BigFloat,-D+hc:hc:D)
-    Coarse=Coarse.-(5/90)
+    #Coarse=Coarse.-(5/90)
     LC=length(Coarse)
-    hf=BigFloat(1)/(BigFloat((n-1))*BigFloat(F));
-    Fine=collect(BigFloat,-D+hf:hf:D)
-    Fine=Fine.-5/900;
+    hf=BigFloat(hc)/(BigFloat(F));
+    Fine=collect(BigFloat,-D+hc:hf:D+1e-10)
+    #Fine=Fine.-5/900;
     LF=length(Fine)
-    F1=collect(BigFloat,A:hf:D-A);
+    F1=collect(BigFloat,A:hf:D-A+1e-10);
     SB=length(F1)
     Modes=round(Int,floor(LC/2)-1);
     M=zeros(BigFloat,LF,Modes)

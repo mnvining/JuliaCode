@@ -1,15 +1,15 @@
 setprecision(230)
 Al=BigFloat(1)/BigFloat(1000);
 # al = 1e-3
-D=BigFloat(350)/BigFloat(100);
-A=BigFloat(125)/BigFloat(100);
+D=BigFloat(4)
+A=BigFloat(52)/BigFloat(35);
 n=10;
 F=10;
 
 
-FCMat=zeros(BigFloat,31,10)
+FCMat=zeros(BigFloat,35,10)
 AMat=zeros(BigFloat,10,1)
-FCMatS=zeros(BigFloat,30,10)
+FCMatS=zeros(BigFloat,34,10)
 AMatS=zeros(BigFloat,10,1)
 for i=0:9
   (a,b,c)=CosCont(i)
