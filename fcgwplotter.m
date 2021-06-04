@@ -1,4 +1,4 @@
-function f=fcg(y,d,CMatrix,SMatrix)
+function [f,yo1L,yo2L,yo1R,yo2R]=fcgwplotter(y,d,CMatrix,SMatrix)
 % function f=fcgram(x,y)
 % input:    x, on [-1,1]
 %           y, on [-1,1]
@@ -17,6 +17,17 @@ C2=ptc(y1,d,CMatrix);
 % CMatrix
 % loads the odd coefficients for degrees 0:9
 % SMatrix
+P1LE=CMatrix(11:35,1:d+1)*C2;
+P1LO=SMatrix(11:35,1:d+1)*C2;
+P2RE=CMatrix(11:35,1:d+1)*C1;
+P2RO=SMatrix(11:35,1:d+1)*C1;
+
+yo1L=[y;P1LE];
+yo2L=[y;P1LO];
+yo1R=[P2RE;y];
+yo2R=[P2RO;y];
+
+
 
 E1=(C1+C2)/2;
 O1=(C1-C2)/2;

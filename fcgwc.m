@@ -1,4 +1,4 @@
-function f=fcg(y,d,CMatrix,SMatrix)
+function f=fcgwc(y,d,c,CMatrix,SMatrix)
 % function f=fcgram(x,y)
 % input:    x, on [-1,1]
 %           y, on [-1,1]
@@ -8,9 +8,9 @@ y1=y(10:-1:1);
 y2=y(end-9:1:end);
 
 % on the right side
-C1=ptc(y2,d,CMatrix);
+C1=ptc(y2,d,CMatrix).*((1-c).^[0:9])';
 % on the left side
-C2=ptc(y1,d,CMatrix);
+C2=ptc(y1,d,CMatrix).*((1-c).^[0:9])';
 
 
 % loads the even coefficients for degrees 0:9
